@@ -13,6 +13,8 @@ COPY ./src ./src
 COPY ./schema.graphql ./schema.graphql
 COPY ./config.yaml ./config.yaml
 COPY ./package.json ./package.json
+# or rescript.json etc depending on preferred handler language
+COPY ./tsconfig.json ./tsconfig.json
 COPY ./envio-start.sh ./envio-start.sh
 
 RUN pnpm install
