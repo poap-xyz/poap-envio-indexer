@@ -1,26 +1,24 @@
+FROM node:24.3.0-slim
 
-ARG ARCH=
-FROM ${ARCH}mcr.microsoft.com/devcontainers/javascript-node:20-bookworm
-WORKDIR /app/base-template
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN npm install -g pnpm@9.7.1
 
-RUN npm install -g npm@latest
+WORKDIR /envio-indexer
 
-ENV PNPM_HOME /usr/local/binp
-RUN npm install --global pnpm
-
-COPY ./abis ./abis
-COPY ./src ./src
-COPY ./schema.graphql ./schema.graphql
-COPY ./config.yaml ./config.yaml
 COPY ./package.json ./package.json
-# or rescript.json etc depending on preferred handler language
-COPY ./tsconfig.json ./tsconfig.json
-COPY ./envio-start.sh ./envio-start.sh
+COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
 
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
+
+COPY ./config.yaml ./config.yaml
+COPY ./schema.graphql ./schema.graphql
+COPY ./abis ./abis
 
 RUN pnpm envio codegen
 
-RUN chmod +x envio-start.sh 
+COPY ./src ./src
+# Or rescript.json etc depending on preferred handler language
+COPY ./tsconfig.json ./tsconfig.json
 
-CMD ./envio-start.sh
+CMD pnpm envio start

@@ -5,13 +5,13 @@ services:
     ports:
       - "${ENVIO_PG_PORT:-5433}:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - envio-indexer-storage:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${ENVIO_POSTGRES_PASSWORD:-testing}
       POSTGRES_USER: ${ENVIO_PG_USER:-postgres}
       POSTGRES_DB: ${ENVIO_PG_DATABASE:-envio-dev}
     networks:
-      - my-proxy-net
+      - envio-indexer-network
   graphql-engine:
     image: hasura/graphql-engine:v2.43.0
     ports:
@@ -38,7 +38,7 @@ services:
       retries: 50
       start_period: 5s
     networks:
-      - my-proxy-net
+      - envio-indexer-network
   envio-indexer:
     container_name: envio-indexer
     build:
@@ -52,7 +52,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.8' 
+          cpus: "0.8"
           memory: 800M
     restart: always
     environment:
@@ -61,16 +61,10 @@ services:
       ENVIO_PG_PORT: 5432
       ENVIO_PG_USER: ${ENVIO_PG_USER:-postgres}
       ENVIO_PG_DATABASE: ${ENVIO_PG_DATABASE:-envio-dev}
-      PG_PASSWORD: ${ENVIO_POSTGRES_PASSWORD:-testing}
-      PG_HOST: envio-postgres
-      PG_PORT: 5432
-      PG_USER: ${ENVIO_PG_USER:-postgres}
-      PG_DATABASE: ${ENVIO_PG_DATABASE:-envio-dev}
+      ENVIO_PG_PUBLIC_SCHEMA: ${ENVIO_PG_PUBLIC_SCHEMA:-envio}
       CONFIG_FILE: ${CONFIG_FILE:-config.yaml}
       LOG_LEVEL: ${LOG_LEVEL:-trace}
       LOG_STRATEGY: ${LOG_STRATEGY:-console-pretty}
-      MAX_QUEUE_SIZE: 50_000
-      MAX_BATCH_SIZE: 10_000
       HASURA_GRAPHQL_ENDPOINT: http://graphql-engine:8080/v1/metadata
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET:-testing}
       HASURA_SERVICE_HOST: graphql-engine
@@ -83,9 +77,8 @@ services:
       retries: 50
       start_period: 5s
     networks:
-      - my-proxy-net
+      - envio-indexer-network
 volumes:
-  db_data:
+  envio-indexer-storage:
 networks:
-  my-proxy-net:
-    name: local_test_network
+  envio-indexer-network:
