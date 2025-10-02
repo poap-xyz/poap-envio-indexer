@@ -16,7 +16,7 @@ WORKDIR /envio-indexer
 COPY ./package.json ./package.json
 COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install -P --frozen-lockfile
 
 COPY ./config.yaml ./config.yaml
 COPY ./schema.graphql ./schema.graphql

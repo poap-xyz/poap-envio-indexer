@@ -1,6 +1,3 @@
 type User {
   id: ID!
-  greetings: [String!]!
-  latestGreeting: String!
-  numberOfGreetings: Int!
 }
