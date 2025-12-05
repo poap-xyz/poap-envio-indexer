@@ -1,3 +1,69 @@
-type User {
+type AdminUpgradeabilityProxy_AdminAdded {
   id: ID!
+  account: String!
+}
+
+type AdminUpgradeabilityProxy_AdminChanged {
+  id: ID!
+  previousAdmin: String!
+  newAdmin: String!
+}
+
+type AdminUpgradeabilityProxy_AdminRemoved {
+  id: ID!
+  account: String!
+}
+
+type AdminUpgradeabilityProxy_Approval {
+  id: ID!
+  owner: String!
+  approved: String!
+  tokenId: BigInt!
+}
+
+type AdminUpgradeabilityProxy_ApprovalForAll {
+  id: ID!
+  owner: String!
+  operator: String!
+  approved: Boolean!
+}
+
+type AdminUpgradeabilityProxy_EventMinterAdded {
+  id: ID!
+  eventId: BigInt!
+  account: String!
+}
+
+type AdminUpgradeabilityProxy_EventMinterRemoved {
+  id: ID!
+  eventId: BigInt!
+  account: String!
+}
+
+type AdminUpgradeabilityProxy_EventToken {
+  id: ID!
+  eventId: BigInt!
+  tokenId: BigInt!
+}
+
+type AdminUpgradeabilityProxy_Paused {
+  id: ID!
+  account: String!
+}
+
+type AdminUpgradeabilityProxy_Transfer {
+  id: ID!
+  from: String!
+  to: String!
+  tokenId: BigInt!
+}
+
+type AdminUpgradeabilityProxy_Unpaused {
+  id: ID!
+  account: String!
+}
+
+type AdminUpgradeabilityProxy_Upgraded {
+  id: ID!
+  implementation: String!
 }
