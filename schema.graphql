@@ -1,17 +1,26 @@
 type AdminUpgradeabilityProxy_AdminAdded {
   id: ID!
   account: String!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
 
 type AdminUpgradeabilityProxy_AdminChanged {
   id: ID!
   previousAdmin: String!
   newAdmin: String!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
 
 type AdminUpgradeabilityProxy_AdminRemoved {
   id: ID!
   account: String!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
 
 type AdminUpgradeabilityProxy_Approval {
@@ -19,6 +28,9 @@ type AdminUpgradeabilityProxy_Approval {
   owner: String!
   approved: String!
   tokenId: BigInt!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
 
 type AdminUpgradeabilityProxy_ApprovalForAll {
@@ -26,29 +38,44 @@ type AdminUpgradeabilityProxy_ApprovalForAll {
   owner: String!
   operator: String!
   approved: Boolean!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
 
 type AdminUpgradeabilityProxy_EventMinterAdded {
   id: ID!
   eventId: BigInt!
   account: String!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
 
 type AdminUpgradeabilityProxy_EventMinterRemoved {
   id: ID!
   eventId: BigInt!
   account: String!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
 
 type AdminUpgradeabilityProxy_EventToken {
   id: ID!
   eventId: BigInt!
   tokenId: BigInt!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
 
 type AdminUpgradeabilityProxy_Paused {
   id: ID!
   account: String!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
 
 type AdminUpgradeabilityProxy_Transfer {
@@ -56,14 +83,23 @@ type AdminUpgradeabilityProxy_Transfer {
   from: String!
   to: String!
   tokenId: BigInt!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
 
 type AdminUpgradeabilityProxy_Unpaused {
   id: ID!
   account: String!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
 
 type AdminUpgradeabilityProxy_Upgraded {
   id: ID!
   implementation: String!
+  chainId: Int!
+  blocknumber: Int!
+  logIndex: Int!
 }
