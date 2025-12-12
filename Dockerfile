@@ -45,7 +45,7 @@ RUN cd generated && pnpm run build
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=5 \
     CMD echo "$(date): Health check running..." && ps aux | head -5 && echo "Health check passed" && exit 0
 
-CMD ["pnpm", "TUI_OFF=true", "envio", "start"]
+CMD ["pnpm", "envio", "start"]
 
 
 
