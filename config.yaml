@@ -17,71 +17,82 @@ contracts:
       - event: Unpaused(address account)
       - event: Upgraded(address indexed implementation)
 networks:
-  - id: 1
+  - id: 1 # Ethereum Mainnet
     start_block: 0
     contracts:
       - name: AdminUpgradeabilityProxy
         address:
           - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
-  - id: 100
+    rpc: ${ETHEREUM_MAINNET_ENDPOINT}
+  - id: 100 # Gnosis Chain
     start_block: 0
     contracts:
       - name: AdminUpgradeabilityProxy
         address:
           - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
-  - id: 8453
+    rpc: ${GNOSIS_CHAIN_ENDPOINT}
+  - id: 8453 # Base Mainnet
     start_block: 0
     contracts:
       - name: AdminUpgradeabilityProxy
         address:
           - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
-  - id: 42161
+    rpc: ${BASE_MAINNET_ENDPOINT}
+  - id: 42161 # Arbitrum One
     start_block: 0
     contracts:
       - name: AdminUpgradeabilityProxy
         address:
           - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
-  # - id: 33139
-  #   start_block: 0
-  #   contracts:
-  #     - name: AdminUpgradeabilityProxy
-  #       address:
-  #         - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
-  - id: 59144
+    rpc: ${ARBITRUM_ONE_ENDPOINT}
+  - id: 33139 # ApeChain (Not supported by hypersync, so using standard RPC)
+    start_block: 6494500 # Approximate block when the contract was deployed (Actual was 6494695 but using a slightly earlier block to be safe)
+    rpc: ${APECHAIN_ENDPOINT}
+    contracts:
+      - name: AdminUpgradeabilityProxy
+        address:
+          - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
+  - id: 59144 # Linea
     start_block: 0
     contracts:
       - name: AdminUpgradeabilityProxy
         address:
           - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
-  - id: 5000
+    rpc: ${LINEA_ENDPOINT}
+  - id: 5000 # Mantle
     start_block: 0
     contracts:
       - name: AdminUpgradeabilityProxy
         address:
           - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
-  - id: 137
+    rpc: ${MANTLE_ENDPOINT}
+  - id: 137 # Polygon Mainnet
     start_block: 0
     contracts:
       - name: AdminUpgradeabilityProxy
         address:
           - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
-  - id: 130
+    rpc: ${POLYGON_MAINNET_ENDPOINT}
+  - id: 130 # Unichain
     start_block: 0
     contracts:
       - name: AdminUpgradeabilityProxy
         address:
           - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
-  - id: 88888
+    rpc: ${UNICHAIN_ENDPOINT}
+  - id: 88888 # Chiliz Mainnet
     start_block: 0
     contracts:
       - name: AdminUpgradeabilityProxy
         address:
           - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
-  - id: 42220
+    rpc: ${CHILIZ_MAINNET_ENDPOINT}
+  - id: 42220 # Celo Mainnet
     start_block: 0
     contracts:
       - name: AdminUpgradeabilityProxy
         address:
           - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
+    rpc: ${CELO_MAINNET_ENDPOINT}
 unordered_multichain_mode: true
 preload_handlers: true
