@@ -20,6 +20,9 @@ import {
 AdminUpgradeabilityProxy.AdminAdded.handler(async ({ event, context }) => {
   const entity: AdminUpgradeabilityProxy_AdminAdded = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    chainId: event.chainId,
+    blocknumber: event.block.number,
+    logIndex: event.logIndex,
     account: event.params.account,
   };
 
@@ -29,6 +32,9 @@ AdminUpgradeabilityProxy.AdminAdded.handler(async ({ event, context }) => {
 AdminUpgradeabilityProxy.AdminChanged.handler(async ({ event, context }) => {
   const entity: AdminUpgradeabilityProxy_AdminChanged = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    chainId: event.chainId,
+    blocknumber: event.block.number,
+    logIndex: event.logIndex,
     previousAdmin: event.params.previousAdmin,
     newAdmin: event.params.newAdmin,
   };
@@ -39,6 +45,9 @@ AdminUpgradeabilityProxy.AdminChanged.handler(async ({ event, context }) => {
 AdminUpgradeabilityProxy.AdminRemoved.handler(async ({ event, context }) => {
   const entity: AdminUpgradeabilityProxy_AdminRemoved = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    chainId: event.chainId,
+    blocknumber: event.block.number,
+    logIndex: event.logIndex,
     account: event.params.account,
   };
 
@@ -48,6 +57,9 @@ AdminUpgradeabilityProxy.AdminRemoved.handler(async ({ event, context }) => {
 AdminUpgradeabilityProxy.Approval.handler(async ({ event, context }) => {
   const entity: AdminUpgradeabilityProxy_Approval = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    chainId: event.chainId,
+    blocknumber: event.block.number,
+    logIndex: event.logIndex,
     owner: event.params.owner,
     approved: event.params.approved,
     tokenId: event.params.tokenId,
@@ -59,6 +71,9 @@ AdminUpgradeabilityProxy.Approval.handler(async ({ event, context }) => {
 AdminUpgradeabilityProxy.ApprovalForAll.handler(async ({ event, context }) => {
   const entity: AdminUpgradeabilityProxy_ApprovalForAll = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    chainId: event.chainId,
+    blocknumber: event.block.number,
+    logIndex: event.logIndex,
     owner: event.params.owner,
     operator: event.params.operator,
     approved: event.params.approved,
@@ -71,6 +86,9 @@ AdminUpgradeabilityProxy.EventMinterAdded.handler(
   async ({ event, context }) => {
     const entity: AdminUpgradeabilityProxy_EventMinterAdded = {
       id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+      chainId: event.chainId,
+      blocknumber: event.block.number,
+      logIndex: event.logIndex,
       eventId: event.params.eventId,
       account: event.params.account,
     };
@@ -83,6 +101,9 @@ AdminUpgradeabilityProxy.EventMinterRemoved.handler(
   async ({ event, context }) => {
     const entity: AdminUpgradeabilityProxy_EventMinterRemoved = {
       id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+      chainId: event.chainId,
+      blocknumber: event.block.number,
+      logIndex: event.logIndex,
       eventId: event.params.eventId,
       account: event.params.account,
     };
@@ -94,6 +115,9 @@ AdminUpgradeabilityProxy.EventMinterRemoved.handler(
 AdminUpgradeabilityProxy.EventToken.handler(async ({ event, context }) => {
   const entity: AdminUpgradeabilityProxy_EventToken = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    chainId: event.chainId,
+    blocknumber: event.block.number,
+    logIndex: event.logIndex,
     eventId: event.params.eventId,
     tokenId: event.params.tokenId,
   };
@@ -104,6 +128,9 @@ AdminUpgradeabilityProxy.EventToken.handler(async ({ event, context }) => {
 AdminUpgradeabilityProxy.Paused.handler(async ({ event, context }) => {
   const entity: AdminUpgradeabilityProxy_Paused = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    chainId: event.chainId,
+    blocknumber: event.block.number,
+    logIndex: event.logIndex,
     account: event.params.account,
   };
 
@@ -113,6 +140,9 @@ AdminUpgradeabilityProxy.Paused.handler(async ({ event, context }) => {
 AdminUpgradeabilityProxy.Transfer.handler(async ({ event, context }) => {
   const entity: AdminUpgradeabilityProxy_Transfer = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    chainId: event.chainId,
+    blocknumber: event.block.number,
+    logIndex: event.logIndex,
     from: event.params.from,
     to: event.params.to,
     tokenId: event.params.tokenId,
@@ -124,6 +154,9 @@ AdminUpgradeabilityProxy.Transfer.handler(async ({ event, context }) => {
 AdminUpgradeabilityProxy.Unpaused.handler(async ({ event, context }) => {
   const entity: AdminUpgradeabilityProxy_Unpaused = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    chainId: event.chainId,
+    blocknumber: event.block.number,
+    logIndex: event.logIndex,
     account: event.params.account,
   };
 
@@ -133,6 +166,9 @@ AdminUpgradeabilityProxy.Unpaused.handler(async ({ event, context }) => {
 AdminUpgradeabilityProxy.Upgraded.handler(async ({ event, context }) => {
   const entity: AdminUpgradeabilityProxy_Upgraded = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    chainId: event.chainId,
+    blocknumber: event.block.number,
+    logIndex: event.logIndex,
     implementation: event.params.implementation,
   };
 
