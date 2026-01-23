@@ -3,174 +3,154 @@
  */
 import {
   AdminUpgradeabilityProxy,
-  AdminUpgradeabilityProxy_AdminAdded,
-  AdminUpgradeabilityProxy_AdminChanged,
-  AdminUpgradeabilityProxy_AdminRemoved,
-  AdminUpgradeabilityProxy_Approval,
-  AdminUpgradeabilityProxy_ApprovalForAll,
-  AdminUpgradeabilityProxy_EventMinterAdded,
-  AdminUpgradeabilityProxy_EventMinterRemoved,
-  AdminUpgradeabilityProxy_EventToken,
-  AdminUpgradeabilityProxy_Paused,
-  AdminUpgradeabilityProxy_Transfer,
-  AdminUpgradeabilityProxy_Unpaused,
-  AdminUpgradeabilityProxy_Upgraded,
+  Token,
+  Account,
+  Event,
+  Transfer,
 } from "generated";
 
-AdminUpgradeabilityProxy.AdminAdded.handler(async ({ event, context }) => {
-  const entity: AdminUpgradeabilityProxy_AdminAdded = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    chainId: event.chainId,
-    blocknumber: event.block.number,
-    logIndex: event.logIndex,
-    account: event.params.account,
-  };
+function createEventID(event: any): string {
+  return event.block.number
+    .toString()
+    .concat("-")
+    .concat(event.logIndex.toString());
+}
 
-  context.AdminUpgradeabilityProxy_AdminAdded.set(entity);
-});
-
-AdminUpgradeabilityProxy.AdminChanged.handler(async ({ event, context }) => {
-  const entity: AdminUpgradeabilityProxy_AdminChanged = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    chainId: event.chainId,
-    blocknumber: event.block.number,
-    logIndex: event.logIndex,
-    previousAdmin: event.params.previousAdmin,
-    newAdmin: event.params.newAdmin,
-  };
-
-  context.AdminUpgradeabilityProxy_AdminChanged.set(entity);
-});
-
-AdminUpgradeabilityProxy.AdminRemoved.handler(async ({ event, context }) => {
-  const entity: AdminUpgradeabilityProxy_AdminRemoved = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    chainId: event.chainId,
-    blocknumber: event.block.number,
-    logIndex: event.logIndex,
-    account: event.params.account,
-  };
-
-  context.AdminUpgradeabilityProxy_AdminRemoved.set(entity);
-});
-
-AdminUpgradeabilityProxy.Approval.handler(async ({ event, context }) => {
-  const entity: AdminUpgradeabilityProxy_Approval = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    chainId: event.chainId,
-    blocknumber: event.block.number,
-    logIndex: event.logIndex,
-    owner: event.params.owner,
-    approved: event.params.approved,
-    tokenId: event.params.tokenId,
-  };
-
-  context.AdminUpgradeabilityProxy_Approval.set(entity);
-});
-
-AdminUpgradeabilityProxy.ApprovalForAll.handler(async ({ event, context }) => {
-  const entity: AdminUpgradeabilityProxy_ApprovalForAll = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    chainId: event.chainId,
-    blocknumber: event.block.number,
-    logIndex: event.logIndex,
-    owner: event.params.owner,
-    operator: event.params.operator,
-    approved: event.params.approved,
-  };
-
-  context.AdminUpgradeabilityProxy_ApprovalForAll.set(entity);
-});
-
-AdminUpgradeabilityProxy.EventMinterAdded.handler(
-  async ({ event, context }) => {
-    const entity: AdminUpgradeabilityProxy_EventMinterAdded = {
-      id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-      chainId: event.chainId,
-      blocknumber: event.block.number,
-      logIndex: event.logIndex,
-      eventId: event.params.eventId,
-      account: event.params.account,
-    };
-
-    context.AdminUpgradeabilityProxy_EventMinterAdded.set(entity);
-  }
-);
-
-AdminUpgradeabilityProxy.EventMinterRemoved.handler(
-  async ({ event, context }) => {
-    const entity: AdminUpgradeabilityProxy_EventMinterRemoved = {
-      id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-      chainId: event.chainId,
-      blocknumber: event.block.number,
-      logIndex: event.logIndex,
-      eventId: event.params.eventId,
-      account: event.params.account,
-    };
-
-    context.AdminUpgradeabilityProxy_EventMinterRemoved.set(entity);
-  }
-);
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 AdminUpgradeabilityProxy.EventToken.handler(async ({ event, context }) => {
-  const entity: AdminUpgradeabilityProxy_EventToken = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    chainId: event.chainId,
-    blocknumber: event.block.number,
-    logIndex: event.logIndex,
-    eventId: event.params.eventId,
-    tokenId: event.params.tokenId,
+  let ev = await context.Event.get(event.params.eventId.toString());
+  // This handler always run after the transfer handler
+  let token = (await context.Token.get(event.params.tokenId.toString()))!;
+  if (ev == null) {
+    ev = {
+      id: event.params.eventId.toString(),
+      tokenCount: BigInt(0),
+      tokenMints: BigInt(0),
+      transferCount: BigInt(0),
+      created: BigInt(event.block.timestamp),
+      chainId: event.chainId,
+    } as Event;
+  }
+
+  const updatedEvent: Event = {
+    ...ev,
+    tokenCount: ev.tokenCount + BigInt(1),
+    tokenMints: ev.tokenMints + BigInt(1),
+    transferCount: ev.transferCount + BigInt(1),
   };
 
-  context.AdminUpgradeabilityProxy_EventToken.set(entity);
-});
-
-AdminUpgradeabilityProxy.Paused.handler(async ({ event, context }) => {
-  const entity: AdminUpgradeabilityProxy_Paused = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    chainId: event.chainId,
-    blocknumber: event.block.number,
-    logIndex: event.logIndex,
-    account: event.params.account,
+  const updatedToken: Token = {
+    ...token,
+    event_id: updatedEvent.id,
+    mintOrder: updatedEvent.tokenMints,
   };
+  context.log.debug(
+    `Event Id: ${updatedEvent.id}, Mint Order: ${updatedEvent.tokenMints}`,
+  );
 
-  context.AdminUpgradeabilityProxy_Paused.set(entity);
+  context.Event.set(updatedEvent);
+  context.Token.set(updatedToken);
 });
 
 AdminUpgradeabilityProxy.Transfer.handler(async ({ event, context }) => {
-  const entity: AdminUpgradeabilityProxy_Transfer = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    chainId: event.chainId,
-    blocknumber: event.block.number,
-    logIndex: event.logIndex,
-    from: event.params.from,
-    to: event.params.to,
-    tokenId: event.params.tokenId,
+  let token = await context.Token.get(event.params.tokenId.toString());
+  let from = await context.Account.get(event.params.from);
+  let to = await context.Account.get(event.params.to);
+
+  if (from == null) {
+    context.log.debug(
+      `Account entity not found for from: ${event.params.from}, creating new Account`,
+    );
+
+    from = {
+      id: event.params.from,
+      // The from account at least has to own one token
+      tokensOwned: BigInt(1),
+      chainId: event.chainId,
+    };
+  }
+  // Don't subtracts from the ZERO_ADDRESS (it's the one that mint the token)
+  // Avoid negative values
+  const updatedFrom: Account = {
+    ...from,
+    tokensOwned:
+      from.id != ZERO_ADDRESS ? from.tokensOwned - BigInt(1) : from.tokensOwned,
+  };
+  context.Account.set(updatedFrom);
+
+  if (to == null) {
+    context.log.debug(
+      `Account entity not found for to: ${event.params.to}, creating new Account`,
+    );
+
+    to = {
+      id: event.params.to,
+      tokensOwned: BigInt(0),
+      chainId: event.chainId,
+    };
+  }
+  const updatedTo: Account = {
+    ...to,
+    tokensOwned: to.tokensOwned + BigInt(1),
+  };
+  context.Account.set(updatedTo);
+
+  if (token == null) {
+    context.log.debug(
+      `Token entity not found for tokenId: ${event.params.tokenId}, creating new Token`,
+    );
+
+    token = {
+      id: event.params.tokenId.toString(),
+      transferCount: BigInt(0),
+      created: BigInt(event.block.timestamp),
+      chainId: Number(event.chainId),
+    } as Token;
+  }
+
+  const updatedToken: Token = {
+    ...token,
+    owner_id: updatedTo.id,
+    transferCount: token.transferCount + BigInt(1),
   };
 
-  context.AdminUpgradeabilityProxy_Transfer.set(entity);
-});
+  context.Token.set(updatedToken);
 
-AdminUpgradeabilityProxy.Unpaused.handler(async ({ event, context }) => {
-  const entity: AdminUpgradeabilityProxy_Unpaused = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+  if (updatedToken.event_id != null) {
+    let evEntity = await context.Event.get(updatedToken.event_id as string);
+
+    if (evEntity != null) {
+      // Add one transfer
+      let updatedEvEntity: Event = {
+        ...evEntity,
+        transferCount: evEntity.transferCount + BigInt(1),
+      };
+
+      // Burning the token
+      if (updatedTo.id == ZERO_ADDRESS) {
+        updatedEvEntity = {
+          ...updatedEvEntity,
+          tokenCount: updatedEvEntity.tokenCount - BigInt(1),
+          // Subtract all the transfers from the burned token
+          transferCount:
+            updatedEvEntity.transferCount - updatedToken.transferCount,
+        };
+      }
+
+      context.Event.set(updatedEvEntity);
+    }
+  }
+
+  const transfer: Transfer = {
+    id: createEventID(event),
     chainId: event.chainId,
-    blocknumber: event.block.number,
-    logIndex: event.logIndex,
-    account: event.params.account,
+    from_id: updatedFrom.id,
+    timestamp: BigInt(event.block.timestamp),
+    to_id: updatedTo.id,
+    token_id: updatedToken.id,
+    transaction: event.transaction.hash,
   };
 
-  context.AdminUpgradeabilityProxy_Unpaused.set(entity);
-});
-
-AdminUpgradeabilityProxy.Upgraded.handler(async ({ event, context }) => {
-  const entity: AdminUpgradeabilityProxy_Upgraded = {
-    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    chainId: event.chainId,
-    blocknumber: event.block.number,
-    logIndex: event.logIndex,
-    implementation: event.params.implementation,
-  };
-
-  context.AdminUpgradeabilityProxy_Upgraded.set(entity);
+  context.Transfer.set(transfer);
 });

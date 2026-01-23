@@ -1,21 +1,14 @@
 # yaml-language-server: $schema=./node_modules/envio/evm.schema.json
 name: envio-indexer
+field_selection:
+  transaction_fields:
+    - "hash"
 contracts:
   - name: AdminUpgradeabilityProxy
     handler: src/EventHandlers.ts
     events:
-      - event: AdminAdded(address indexed account)
-      - event: AdminChanged(address previousAdmin, address newAdmin)
-      - event: AdminRemoved(address indexed account)
-      - event: Approval(address indexed owner, address indexed approved, uint256 indexed tokenId)
-      - event: ApprovalForAll(address indexed owner, address indexed operator, bool approved)
-      - event: EventMinterAdded(uint256 indexed eventId, address indexed account)
-      - event: EventMinterRemoved(uint256 indexed eventId, address indexed account)
       - event: EventToken(uint256 eventId, uint256 tokenId)
-      - event: Paused(address account)
       - event: Transfer(address indexed from, address indexed to, uint256 indexed tokenId)
-      - event: Unpaused(address account)
-      - event: Upgraded(address indexed implementation)
 networks:
   - id: 1 # Ethereum Mainnet
     start_block: 0
@@ -95,4 +88,3 @@ networks:
           - 0x22C1f6050E56d2876009903609a2cC3fEf83B415
     rpc: ${CELO_MAINNET_ENDPOINT}
 unordered_multichain_mode: true
-preload_handlers: true

@@ -1,105 +1,37 @@
-type AdminUpgradeabilityProxy_AdminAdded {
+type Token {
   id: ID!
-  account: String!
+  owner: Account!
+  event: Event
+  transfers: [Transfer!]! @derivedFrom(field: "token")
+  transferCount: BigInt!
+  created: BigInt!
+  mintOrder: BigInt
   chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
 }
 
-type AdminUpgradeabilityProxy_AdminChanged {
+type Account {
   id: ID!
-  previousAdmin: String!
-  newAdmin: String!
+  tokens: [Token!]! @derivedFrom(field: "owner")
+  tokensOwned: BigInt!
   chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
 }
 
-type AdminUpgradeabilityProxy_AdminRemoved {
+type Event {
   id: ID!
-  account: String!
+  tokens: [Token!]! @derivedFrom(field: "event")
+  tokenCount: BigInt!
+  created: BigInt!
+  transferCount: BigInt!
+  tokenMints: BigInt!
   chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
 }
 
-type AdminUpgradeabilityProxy_Approval {
+type Transfer {
   id: ID!
-  owner: String!
-  approved: String!
-  tokenId: BigInt!
+  token: Token!
+  from: Account!
+  to: Account!
+  transaction: Bytes!
+  timestamp: BigInt!
   chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
-}
-
-type AdminUpgradeabilityProxy_ApprovalForAll {
-  id: ID!
-  owner: String!
-  operator: String!
-  approved: Boolean!
-  chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
-}
-
-type AdminUpgradeabilityProxy_EventMinterAdded {
-  id: ID!
-  eventId: BigInt!
-  account: String!
-  chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
-}
-
-type AdminUpgradeabilityProxy_EventMinterRemoved {
-  id: ID!
-  eventId: BigInt!
-  account: String!
-  chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
-}
-
-type AdminUpgradeabilityProxy_EventToken {
-  id: ID!
-  eventId: BigInt!
-  tokenId: BigInt!
-  chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
-}
-
-type AdminUpgradeabilityProxy_Paused {
-  id: ID!
-  account: String!
-  chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
-}
-
-type AdminUpgradeabilityProxy_Transfer {
-  id: ID!
-  from: String!
-  to: String!
-  tokenId: BigInt!
-  chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
-}
-
-type AdminUpgradeabilityProxy_Unpaused {
-  id: ID!
-  account: String!
-  chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
-}
-
-type AdminUpgradeabilityProxy_Upgraded {
-  id: ID!
-  implementation: String!
-  chainId: Int!
-  blocknumber: Int!
-  logIndex: Int!
 }
