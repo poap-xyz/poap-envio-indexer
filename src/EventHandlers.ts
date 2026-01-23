@@ -150,6 +150,7 @@ AdminUpgradeabilityProxy.Transfer.handler(async ({ event, context }) => {
     chainId: event.chainId,
     from_id: updatedFrom.id,
     timestamp: BigInt(event.block.timestamp),
+    blockNumber: BigInt(event.block.number),
     to_id: updatedTo.id,
     token_id: updatedToken.id,
     transaction: event.transaction.hash,

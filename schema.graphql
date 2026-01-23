@@ -35,5 +35,6 @@ type Transfer {
   to: Account!
   transaction: Bytes!
   timestamp: BigInt!
+  blockNumber: BigInt!
   chainId: Int!
 }
