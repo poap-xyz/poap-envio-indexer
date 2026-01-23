@@ -1,5 +1,6 @@
 type Token {
   id: ID!
+  tokenId: BigInt!
   owner: Account!
   event: Event
   transfers: [Transfer!]! @derivedFrom(field: "token")
@@ -11,6 +12,7 @@ type Token {
 
 type Account {
   id: ID!
+  address: Bytes!
   tokens: [Token!]! @derivedFrom(field: "owner")
   tokensOwned: BigInt!
   chainId: Int!

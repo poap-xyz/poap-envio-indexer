@@ -10,21 +10,28 @@ import {
 } from "generated";
 
 function createEventID(event: any): string {
-  return event.block.number
-    .toString()
-    .concat("-")
-    .concat(event.logIndex.toString());
+  return `${event.block.number.toString()}-${event.logIndex.toString()}-${event.chainId}`;
+}
+
+function createTokenID(tokenId: bigint, chainId: number): string {
+  return `${tokenId.toString()}-${chainId}`;
+}
+
+function createAccountID(address: string, chainId: number): string {
+  return `${address}-${chainId}`;
 }
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 AdminUpgradeabilityProxy.EventToken.handler(async ({ event, context }) => {
-  let ev = await context.Event.get(event.params.eventId.toString());
+  let ev = await context.Event.get(createEventID(event));
   // This handler always run after the transfer handler
-  let token = (await context.Token.get(event.params.tokenId.toString()))!;
+  let token = (await context.Token.get(
+    createTokenID(event.params.tokenId, event.chainId),
+  ))!;
   if (ev == null) {
     ev = {
-      id: event.params.eventId.toString(),
+      id: createEventID(event),
       tokenCount: BigInt(0),
       tokenMints: BigInt(0),
       transferCount: BigInt(0),
@@ -45,26 +52,26 @@ AdminUpgradeabilityProxy.EventToken.handler(async ({ event, context }) => {
     event_id: updatedEvent.id,
     mintOrder: updatedEvent.tokenMints,
   };
-  context.log.debug(
-    `Event Id: ${updatedEvent.id}, Mint Order: ${updatedEvent.tokenMints}`,
-  );
 
   context.Event.set(updatedEvent);
   context.Token.set(updatedToken);
 });
 
 AdminUpgradeabilityProxy.Transfer.handler(async ({ event, context }) => {
-  let token = await context.Token.get(event.params.tokenId.toString());
-  let from = await context.Account.get(event.params.from);
-  let to = await context.Account.get(event.params.to);
+  let token = await context.Token.get(
+    createTokenID(event.params.tokenId, event.chainId),
+  );
+  let from = await context.Account.get(
+    createAccountID(event.params.from, event.chainId),
+  );
+  let to = await context.Account.get(
+    createAccountID(event.params.to, event.chainId),
+  );
 
   if (from == null) {
-    context.log.debug(
-      `Account entity not found for from: ${event.params.from}, creating new Account`,
-    );
-
     from = {
-      id: event.params.from,
+      id: createAccountID(event.params.from, event.chainId),
+      address: event.params.from,
       // The from account at least has to own one token
       tokensOwned: BigInt(1),
       chainId: event.chainId,
@@ -75,17 +82,16 @@ AdminUpgradeabilityProxy.Transfer.handler(async ({ event, context }) => {
   const updatedFrom: Account = {
     ...from,
     tokensOwned:
-      from.id != ZERO_ADDRESS ? from.tokensOwned - BigInt(1) : from.tokensOwned,
+      from.address != ZERO_ADDRESS
+        ? from.tokensOwned - BigInt(1)
+        : from.tokensOwned,
   };
   context.Account.set(updatedFrom);
 
   if (to == null) {
-    context.log.debug(
-      `Account entity not found for to: ${event.params.to}, creating new Account`,
-    );
-
     to = {
-      id: event.params.to,
+      id: createAccountID(event.params.to, event.chainId),
+      address: event.params.to,
       tokensOwned: BigInt(0),
       chainId: event.chainId,
     };
@@ -97,12 +103,9 @@ AdminUpgradeabilityProxy.Transfer.handler(async ({ event, context }) => {
   context.Account.set(updatedTo);
 
   if (token == null) {
-    context.log.debug(
-      `Token entity not found for tokenId: ${event.params.tokenId}, creating new Token`,
-    );
-
     token = {
-      id: event.params.tokenId.toString(),
+      id: createTokenID(event.params.tokenId, event.chainId),
+      tokenId: event.params.tokenId,
       transferCount: BigInt(0),
       created: BigInt(event.block.timestamp),
       chainId: Number(event.chainId),
